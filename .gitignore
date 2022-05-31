@@ -1,0 +1,10 @@
+# large dependencies
+libs/*
+
+# compiled object directories and file types
+build
+__pycache__
+*.pyc
+
+# ide settings
+.vscode

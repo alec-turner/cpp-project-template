@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+TARGET_NAME = ''
+TARGET_BRIEF = ''
+TARGET_DESCRIPTION = '''
+
+'''
+
+APPLICATION=''
+PLATFORM=''
+RELEASE=''
+
+OUTPUT_NAME=''
+OUTPUT_VARIANTS=[]
+
+C_FLAGS = []
+CXX_FLAGS = []
+AS_FLAGS = []
+LD_FLAGS = []
+
+SRC_FILES = []
+INC_DIRS = []
