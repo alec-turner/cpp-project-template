@@ -20,11 +20,7 @@ def flash(target, variant='hex'):
   print(f'Flashing target={target}')
 
   config = get_build_config(target)
-  build_path = get_build_dir(
-      config['PLATFORM'],
-      config['APPLICATION'],
-      config['RELEASE']
-  )
+  build_path = get_build_dir(target)
   output_name = config['OUTPUT_NAME']
   output_file = f'{output_name}.{variant}'
   output_path = os.path.join(build_path, output_file)

@@ -112,9 +112,13 @@ def validate_release(release):
     raise ValueError(f'Invalid release: {release}')
 
 
-def get_build_dir(platform, application, release):
+def get_build_dir(target):
   root_build_dir = config.project.BUILD_DIR
-  return os.path.join(root_build_dir, release, platform, application)
+  target_config = get_target_config(target)
+  platform = target_config['PLATFORM']
+  application = target_config['APPLICATION']
+  release = target_config['RELEASE']
+  return os.path.join(root_build_dir, platform, application, release)
 
 
 def get_toolchain_info(prefix='arm-none-eabi-', test_cmd='gcc'):

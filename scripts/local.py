@@ -20,11 +20,7 @@ def run(target):
   print(f'Running target={target}')
 
   config = get_build_config(target)
-  build_path = get_build_dir(
-      config['PLATFORM'],
-      config['APPLICATION'],
-      config['RELEASE']
-  )
+  build_path = get_build_dir(target)
   output_name = config['OUTPUT_NAME']
   output_file = f'{output_name}'
   output_path = os.path.join(build_path, output_file)

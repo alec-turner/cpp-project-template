@@ -10,7 +10,7 @@ import subprocess
 from scripts.utils import *
 
 
-TEMPLATE_MAKEFILE = os.path.join(os.path.dirname(__file__), os.pardir, 'makefiles', 'template.mk')
+TEMPLATE_MAKEFILE = os.path.join('config', 'template.mk')
 
 
 def build(target='all'):
@@ -47,11 +47,7 @@ def build(target='all'):
 
     # setup build environment
     make_variables = {
-      'BUILD_PATH': get_build_dir(
-          config['PLATFORM'],
-          config['APPLICATION'],
-          config['RELEASE']
-      ),
+      'BUILD_PATH': get_build_dir(target),
       'OUTPUT_NAME': config['OUTPUT_NAME'],
       'OUTPUT_VARIANTS': ' '.join(config['OUTPUT_VARIANTS']),
       'C_CMD': config['C_CMD'],
@@ -89,7 +85,7 @@ def build(target='all'):
   return 0
 
 
-def clean(platform='all', application='all', release='debug'):
+def clean(target='all'):
   """Clean command - Clean the build directory for the specified platform and application.
 
   Args:
@@ -100,12 +96,32 @@ def clean(platform='all', application='all', release='debug'):
   Returns:
       int: sys exit code
   """
-  print(f'Cleaning platform={platform} application={application} release={release}')
-  validate_platform(platform)
-  validate_application(application)
-  validate_release(release)
-  shutil.rmtree()
+
+  if target == 'all':
+    print('Cleaning all targets')
+    config = get_project_config()
+    build_path = config['BUILD_DIR']
+  else:
+    print(f'Cleaning target "{target}"')
+    config = get_build_config(target)
+    build_path = get_build_dir(target)
+
+  print(f'Removing dir: {build_path}')
+  shutil.rmtree(build_path)
   return 0
+
+
+def docs():
+  """Build Doxygen documentation
+  
+  Returns:
+      int: sys exit code
+  """
+  # run doxygen
+  result = subprocess.run(['doxygen', 'doxygen.conf'])
+
+  # return result
+  return result
 
 
 def _generate_makefile(output, template_file=TEMPLATE_MAKEFILE, **template_values):

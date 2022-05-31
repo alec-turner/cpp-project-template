@@ -13,11 +13,8 @@ def help():
       int: sys exit code
   """
 
-  platforms = utils.get_platforms()
   targets = utils.get_targets()
-
   target_list = '\n    '.join(sorted(targets))
-  platform_list = '\n    '.join(sorted(platforms))
 
   script_sets = utils.get_scripts()
   method_lists = {
@@ -25,15 +22,17 @@ def help():
   }
 
   print(f'''
-C++ Template Project - Build Tool
+C/C++ Template Project - Build Tool
 
   Usage:
     python3 manage.py COMMAND [ ARGS ] [ OPTIONS ]
 
   Commands [ args ]:
-    help
-    clean [ TARGET ]    Default: clean all
-    build [ TARGET ]    Default: build all
+    help                           Show this help message
+    docs                           Build docs with Doxygen
+    clean [ TARGET ]               Clean the build directory Default: clean all
+    build [ TARGET ]               Build one or all targets Default: build all
+    script  TYPE  NAME  [ ARGS]    Run a custom script (see "Custom Scripts")
 
   Options:
     -d, --debug         Enable debug logging
@@ -41,17 +40,12 @@ C++ Template Project - Build Tool
   Targets:
     {target_list}
 
-  Platforms:
-    {platform_list}
+  Custom Scripts:'''.format())
 
-  Additional Scripts
-'''.format())
-
-  for name, methods in method_lists.items():
-    print()
-    print(f'    {name}')
-    for method,info in methods.items():
-      print(f'      {method} {info["args"]}')
+  for script_type, commands in method_lists.items():
+    print(f'    {script_type}')
+    for command,info in commands.items():
+      print(f'      {command} {info["args"]}')
 
   return 0
 
@@ -94,6 +88,7 @@ def run_script(source, method, *args):
 # collect list of command methods
 COMMANDS = {
   'help': help,
+  'docs': builder.docs,
   'clean': builder.clean,
   'build': builder.build,
   'script': run_script

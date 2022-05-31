@@ -3,6 +3,7 @@ libs/*
 
 # compiled object directories and file types
 build
+docs
 __pycache__
 *.pyc
 
