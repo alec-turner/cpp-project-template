@@ -7,6 +7,7 @@
 import os
 import subprocess
 import importlib
+import logging
 import config
 
 
@@ -80,7 +81,22 @@ def _load_config(config_type, config_name):
   else:
     mod = importlib.import_module(f'config.{config_type}.{config_name}')
 
-  return { k: getattr(mod, k) for k in dir(mod) if not k.startswith('__') }
+  config = {}
+  for k in dir(mod):
+    v = getattr(mod, k)
+
+    if not k.isupper():
+      logging.debug(f'skip "{k}" (not uppercase')
+      continue
+    
+    if type(v) not in (str, int, float, dict, bool, list, tuple):
+      logging.debug(f'skip "{k}" of type "{type(v)}"')
+      continue
+
+    logging.debug(f'Adding config {k}: {v}')
+    config[k] = v
+
+  return config
 
 
 def _merge_config(config1, config2):
@@ -89,6 +105,8 @@ def _merge_config(config1, config2):
     if k in config:
       if type(v) is list:
         config[k] += v
+      elif type(v) is dict:
+        config[k].update(v)
       else:
         raise Exception(f'Conflicting config values for {k}')
     else:
@@ -121,13 +139,13 @@ def get_build_dir(target):
   return os.path.join(root_build_dir, platform, application, release)
 
 
-def get_toolchain_info(prefix='arm-none-eabi-', test_cmd='gcc'):
+def get_toolchain_info(prefix='arm-none-eabi', test_cmd='gcc'):
   # get path
-  out = subprocess.check_output(['which', f'{prefix}{test_cmd}'])
+  out = subprocess.check_output(['which', f'{prefix}-{test_cmd}'])
   path = os.path.dirname(out.decode('utf-8').strip())
 
   # get version
-  out = subprocess.check_output([f'{prefix}{test_cmd}', '-dumpversion'])
+  out = subprocess.check_output([f'{prefix}-{test_cmd}', '-dumpversion'])
   version = out.decode('utf-8').strip()
 
   return {

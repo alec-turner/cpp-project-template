@@ -7,10 +7,13 @@ Debug-level release suitable for use with common debugging tools. Optimisations
 are limited compared to a production build.
 '''
 
-C_FLAGS = []
-CXX_FLAGS = []
+C_FLAGS = ['-Og', '-g']
+CXX_FLAGS = ['-Og', '-g', '-DDEBUG=1']
 AS_FLAGS = []
 LD_FLAGS = []
 
 SRC_FILES = []
 INC_DIRS = []
+
+MAKE_VARS = {}
+MAKE_INCLUDES = []

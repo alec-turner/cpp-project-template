@@ -23,3 +23,6 @@ LD_FLAGS = []
 
 SRC_FILES = []
 INC_DIRS = []
+
+MAKE_VARS = {}
+MAKE_INCLUDES = []

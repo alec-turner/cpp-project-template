@@ -3,6 +3,11 @@
 MODULE_PATH = 'scripts.nrf52'
 SCRIPTS = [
   {
+    'name': 'readregs',
+    'args': '',
+    'brief': 'Read registers from the attached device'
+  },
+  {
     'name': 'flash',
     'args': 'TARGET [ VARIANT ]',
     'brief': 'Flash a pre-build binary to the attached device'

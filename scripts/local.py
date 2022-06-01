@@ -8,7 +8,7 @@ import subprocess
 from scripts.utils import get_build_config, get_build_dir
 
 
-def run(target):
+def run(target, *args):
   """Run command - Run the pre-built program
 
   Args:
@@ -25,5 +25,9 @@ def run(target):
   output_file = f'{output_name}'
   output_path = os.path.join(build_path, output_file)
 
-  result = subprocess.run(output_path)
+  cmd_args = [output_path] + list(args)
+  cmd_string = ' '.join(cmd_args)
+  print(f'cmd="{cmd_string}"')
+  print()
+  result = subprocess.run(cmd_args)
   return result.returncode

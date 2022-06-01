@@ -16,3 +16,6 @@ SRC_FILES = [
   'src/application/hello/main.cc'
 ]
 INC_DIRS = []
+
+MAKE_VARS = {}
+MAKE_INCLUDES = []

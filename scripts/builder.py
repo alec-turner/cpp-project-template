@@ -10,7 +10,7 @@ import subprocess
 from scripts.utils import *
 
 
-TEMPLATE_MAKEFILE = os.path.join('config', 'template.mk')
+TEMPLATE_MAKEFILE = os.path.join('res', 'template.mk')
 
 
 def build(target='all'):
@@ -30,57 +30,50 @@ def build(target='all'):
     return 0
   
   print(f'Building target={target}')
-  temp_files = {
-    'makefile': 'tmp.mk'
+
+  # get build config
+  config = get_build_config(target)
+
+  # configure paths and initialise build dir
+  build_path = get_build_dir(target)
+  os.makedirs(build_path, exist_ok=True)
+  makefile_path = os.path.join(build_path, f'{target}.mk')
+
+  # parse out various file types
+  c_input_files = filter(lambda f: f.endswith('.c'), config['SRC_FILES'])
+  cxx_input_files = filter(lambda f: f.endswith('.cc') or f.endswith('.cpp'), config['SRC_FILES'])
+  as_input_files = filter(lambda f: f.lower().endswith('.s'), config['SRC_FILES'])
+  ld_input_files = filter(lambda f: f.endswith('.ld'), config['SRC_FILES'])
+
+  # setup build environment
+  make_variables = {
+    'BUILD_PATH': build_path,
+    'OUTPUT_NAME': config['OUTPUT_NAME'],
+    'OUTPUT_VARIANTS': ' '.join(config['OUTPUT_VARIANTS']),
+    'C_CMD': config['C_CMD'],
+    'CXX_CMD': config['CXX_CMD'],
+    'AS_CMD': config['AS_CMD'],
+    'LD_CMD': config['LD_CMD'],
+    'OBJCOPY_CMD': config['OBJCOPY_CMD'],
+    'OBJDUMP_CMD': config['OBJDUMP_CMD'],
+    'C_INPUT_FILES':  ' '.join(c_input_files),
+    'CXX_INPUT_FILES':  ' '.join(cxx_input_files),
+    'AS_INPUT_FILES':  ' '.join(as_input_files),
+    'LD_INPUT_FILES':  ' '.join(ld_input_files),
+    'C_FLAGS':  ' '.join(config['C_FLAGS']),
+    'CXX_FLAGS':  ' '.join(config['CXX_FLAGS']),
+    'AS_FLAGS':  ' '.join(config['AS_FLAGS']),
+    'LD_FLAGS':  ' '.join(config['LD_FLAGS']),
+    'INC_DIRS': ' '.join(f'-I{d}' for d in config['INC_DIRS']),
+    'MAKE_VARS': '\n'.join(f'{k}:={v}' for k, v in config['MAKE_VARS'].items()),
+    'MAKE_INCLUDES': '\n'.join(f'include {f}' for f in config['MAKE_INCLUDES']),
   }
 
-  try:
+  # generate makefile
+  _generate_makefile(makefile_path, **make_variables)
 
-    # get build config
-    config = get_build_config(target)
-
-    # parse out various file types
-    c_input_files = filter(lambda f: f.endswith('.c'), config['SRC_FILES'])
-    cxx_input_files = filter(lambda f: f.endswith('.cc') or f.endswith('.cpp'), config['SRC_FILES'])
-    as_input_files = filter(lambda f: f.lower().endswith('.s'), config['SRC_FILES'])
-    ld_input_files = filter(lambda f: f.endswith('.ld'), config['SRC_FILES'])
-
-    # setup build environment
-    make_variables = {
-      'BUILD_PATH': get_build_dir(target),
-      'OUTPUT_NAME': config['OUTPUT_NAME'],
-      'OUTPUT_VARIANTS': ' '.join(config['OUTPUT_VARIANTS']),
-      'C_CMD': config['C_CMD'],
-      'CXX_CMD': config['CXX_CMD'],
-      'AS_CMD': config['AS_CMD'],
-      'LD_CMD': config['LD_CMD'],
-      'OBJCOPY_CMD': config['OBJCOPY_CMD'],
-      'OBJDUMP_CMD': config['OBJDUMP_CMD'],
-      'C_INPUT_FILES':  ' '.join(c_input_files),
-      'CXX_INPUT_FILES':  ' '.join(cxx_input_files),
-      'AS_INPUT_FILES':  ' '.join(as_input_files),
-      'LD_INPUT_FILES':  ' '.join(ld_input_files),
-      'C_FLAGS':  ' '.join(config['C_FLAGS']),
-      'CXX_FLAGS':  ' '.join(config['CXX_FLAGS']),
-      'AS_FLAGS':  ' '.join(config['AS_FLAGS']),
-      'LD_FLAGS':  ' '.join(config['LD_FLAGS']),
-    }
-
-    # generate makefile
-    _generate_makefile(temp_files['makefile'], **make_variables)
-
-    # build
-    subprocess.run(['make', '-f', temp_files['makefile']])
-
-  finally:
-    # cleanup temp files
-    for temp_file in temp_files.values():
-      print(f'Removing temp file: {temp_file}')
-      try:
-        os.remove(temp_file)
-      except FileNotFoundError:
-        pass
-
+  # build
+  subprocess.run(['make', '-f', makefile_path])
 
   return 0
 

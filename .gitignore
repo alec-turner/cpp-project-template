@@ -1,5 +1,5 @@
 # large dependencies
-libs/*
+lib/*
 
 # compiled object directories and file types
 build

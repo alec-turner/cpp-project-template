@@ -13,8 +13,6 @@ variables.
 # define high-level project directory structure
 BUILD_DIR = 'build'
 SRC_DIR = 'src'
-SDK_DIR = 'lib/nRF5_SDK_17.1.0'
-
 
 # common args for all targets
 C_FLAGS = [
@@ -32,6 +30,10 @@ CXX_FLAGS = [
 AS_FLAGS = []
 LD_FLAGS = []
 
+SRC_FILES=[]
 INC_DIRS = [
   SRC_DIR
 ]
+
+MAKE_VARS = {}
+MAKE_INCLUDES = []

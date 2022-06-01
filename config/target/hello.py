@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-TARGET_NAME = 'local_hello_debug'
+TARGET_NAME = 'hello'
 TARGET_BRIEF = 'Debuggable Hello World example for local machine'
 TARGET_DESCRIPTION = '''
 The basic Hello World application built for the local build machine. Debug
@@ -21,3 +21,6 @@ LD_FLAGS = []
 
 SRC_FILES = []
 INC_DIRS = []
+
+MAKE_VARS = {}
+MAKE_INCLUDES = []

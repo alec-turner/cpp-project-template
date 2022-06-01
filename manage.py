@@ -32,7 +32,7 @@ C/C++ Template Project - Build Tool
     docs                           Build docs with Doxygen
     clean [ TARGET ]               Clean the build directory Default: clean all
     build [ TARGET ]               Build one or all targets Default: build all
-    script  TYPE  NAME  [ ARGS]    Run a custom script (see "Custom Scripts")
+    script TYPE NAME [ ARGS]    Run a custom script (see "Custom Scripts")
 
   Options:
     -d, --debug         Enable debug logging
