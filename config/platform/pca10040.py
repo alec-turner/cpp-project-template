@@ -91,12 +91,7 @@ LD_FLAGS = [
   '-mfloat-abi=hard',
   '-mfpu=fpv4-sp-d16',
   '-Wl,--gc-sections',
-  '--specs=nano.specs',
-
-  # Defined in nrf makefile under LIB_FILES
-  # '-lc',
-  # 'lnosys',
-  # 'lm'
+  '--specs=nano.specs'
 ]
 SRC_FILES = []
 INC_DIRS = []

@@ -4,6 +4,7 @@
 
 """
 import os
+import logging
 import subprocess
 from scripts.utils import get_build_config, get_build_dir
 
@@ -28,7 +29,7 @@ def flash(target, variant='hex'):
   Returns:
       int: sys exit code
   """
-  print(f'Flashing target={target}')
+  logging.info(f'Flashing target={target}')
 
   config = get_build_config(target)
   build_path = get_build_dir(target)
@@ -36,7 +37,10 @@ def flash(target, variant='hex'):
   output_file = f'{output_name}.{variant}'
   output_path = os.path.join(build_path, output_file)
 
-  result = subprocess.run(['nrfjprog', '-f', 'NRF52', '--program', output_path, '--sectorerase', '--reset'])
+  cmd_args = ['nrfjprog', '-f', 'NRF52', '--program', output_path, '--sectorerase', '--verify', '--reset']
+  logging.debug(' '.join(cmd_args))
+
+  result = subprocess.run(cmd_args)
   return result.returncode
 
 
@@ -48,7 +52,10 @@ def erase():
   Returns:
       int: sys exit code
   """
-  result = subprocess.run(['nrfjprog', '-f' ,'NRF52', '--eraseall'])
+  logging.info('Erasing flash')
+  cmd_args = ['nrfjprog', '-f' ,'NRF52', '--eraseall']
+  logging.debug(' '.join(cmd_args))
+  result = subprocess.run(cmd_args)
   return result.returncode
 
 
@@ -60,5 +67,8 @@ def reset():
   Returns:
       int: sys exit code
   """
-  result = subprocess.run(['nrfjprog', '-f' ,'NRF52', '-r'])
+  logging.info('Resetting device')
+  cmd_args = ['nrfjprog', '-f' ,'NRF52', '--reset']
+  logging.debug(' '.join(cmd_args))
+  result = subprocess.run(cmd_args)
   return result.returncode

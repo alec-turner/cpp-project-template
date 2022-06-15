@@ -2,10 +2,11 @@
 
 import os
 
-APPLICATION_NAME = 'blinky'
-APPLICATION_BRIEF = 'Basic "blinky" example'
+APPLICATION_NAME = 'spi_example'
+APPLICATION_BRIEF = 'Example SPI Application'
 APPLICATION_DESCRIPTION = '''
-Basic "blinky" application - toggles an LED on and off.
+SPI (master) example application using the Bosch BME280 pressure, temperature
+and humidity sensor.
 '''
 
 C_FLAGS = []

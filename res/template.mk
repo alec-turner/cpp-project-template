@@ -36,12 +36,17 @@ inc_dirs:={INC_DIRS}
 # define intermediate files
 c_objs:=$(addsuffix .o,$(addprefix $(build_path)/, $(c_input_files)))
 cxx_objs:=$(addsuffix .o,$(addprefix $(build_path)/, $(cxx_input_files)))
+as_objs:=$(addsuffix .o,$(addprefix $(build_path)/, $(as_input_files)))
 
 # define compiler/linker flags
 c_flags:={C_FLAGS} $(inc_dirs)
 cxx_flags:={CXX_FLAGS} $(inc_dirs)
 as_flags:={AS_FLAGS} $(inc_dirs)
 ld_flags:={LD_FLAGS} $(inc_dirs)
+
+# define dependency-related flags, files
+dep_flags=-MT $@ -MMD -MP -MF $(patsubst %.o, %.d, $@)
+dep_files:=$(patsubst %.o, %.d, $(c_objs) $(cxx_objs))
 
 # assign default target to override included makefiles
 default:build
@@ -57,6 +62,12 @@ default:build
 
 # default target
 default:build
+
+
+# dependencies rules
+$(dep_files):
+
+include $(wildcard $(dep_files))
 
 
 # build output targets
@@ -91,7 +102,7 @@ $(build_path)/$(output_name).map:$(primary_output)
 
 
 # primary build target
-$(primary_output):$(c_objs) $(cxx_objs)
+$(primary_output):$(c_objs) $(cxx_objs) $(as_objs)
 	@mkdir -p $(@D)
 	@echo 
 	@echo linking $@
@@ -103,7 +114,7 @@ $(build_path)/%.c.o:%.c
 	@mkdir -p $(@D)
 	@echo 
 	@echo compiling $<
-	$(c_cmd) $(c_flags) -c -o $@ $<
+	$(c_cmd) $(c_flags) $(dep_flags) -c -o $@ $<
 
 
 # c++ compile rules
@@ -111,13 +122,13 @@ $(build_path)/%.cc.o:%.cc
 	@mkdir -p $(@D)
 	@echo 
 	@echo compiling $<
-	$(cxx_cmd) $(cxx_flags) -c -o $@ $<
+	$(cxx_cmd) $(cxx_flags) $(dep_flags) -c -o $@ $<
 
 $(build_path)/%.cpp.o:%.cpp
 	@mkdir -p $(@D)
 	@echo 
 	@echo compiling $<
-	$(cxx_cmd) $(cxx_flags) -c -o $@ $<
+	$(cxx_cmd) $(cxx_flags) $(dep_flags) -c -o $@ $<
 
 
 # asm compile rules
