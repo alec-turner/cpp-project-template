@@ -2,27 +2,15 @@
 
 import os
 
-linker_script = os.path.join('res', 'pca10040_nosd.ld')
 sdk_path = os.path.join('lib', 'nRF5_SDK_17.1.0')
 
-TARGET_NAME = 'spi'
-TARGET_BRIEF = 'Example SPI Application for nRF5DK'
-TARGET_DESCRIPTION = '''
-SPI (master) example application using the nRF5DK and Bosch BME280 pressure,
-temperature and humidity sensor.
+APPLICATION_NAME = 'bmp280'
+APPLICATION_BRIEF = 'Basic BMP280 Pressure/Temperature Sensor Monitor'
+APPLICATION_DESCRIPTION = '''
+Example application using the Bosch BME280 pressure, temperature sensor with
+the PCA10040's SPI or TWI interface.
 '''
 
-APPLICATION='spi'
-PLATFORM='pca10040'
-RELEASE='debug'
-
-OUTPUT_NAME='spi'
-OUTPUT_VARIANTS=[
-  'hex',
-  'bin',
-  'elf',
-  'map'
-]
 
 C_FLAGS = [
   '-DCONFIG_GPIO_AS_PINRESET',
@@ -43,16 +31,12 @@ AS_FLAGS = [
   '-DBSP_DEFINES_ONLY',
   '-DCONFIG_GPIO_AS_PINRESET',
 ]
-LD_FLAGS = [
-  f'-T{linker_script}',
-]
+LD_FLAGS = []
 
 SRC_FILES = [
-  os.path.join('src', 'application', 'spi', 'pca10040_main.cc'),
-  os.path.join('src', 'platform', 'pca10040', 'spi', 'spi_driver.cc'),
+  os.path.join('src', 'application', 'bmp280', 'pca10040_main.cc'),
   os.path.join('src', 'platform', 'pca10040', 'bmp280', 'bmp2.c'),
   os.path.join('src', 'platform', 'pca10040', 'bmp280', 'bmp280_driver.cc'),
-  os.path.join('src', 'platform', 'pca10040', 'bmp280', 'bmp280_spi.cc'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'mdk', 'gcc_startup_nrf52.S'),
   os.path.join(sdk_path, 'components', 'libraries', 'log', 'src', 'nrf_log_backend_rtt.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'log', 'src', 'nrf_log_backend_serial.c'),
@@ -61,14 +45,10 @@ SRC_FILES = [
   os.path.join(sdk_path, 'components', 'libraries', 'log', 'src', 'nrf_log_frontend.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'log', 'src', 'nrf_log_str_formatter.c'),
   os.path.join(sdk_path, 'components', 'boards', 'boards.c'),
-  os.path.join(sdk_path, 'components', 'libraries', 'button', 'app_button.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'util', 'app_error.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'util', 'app_error_handler_gcc.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'util', 'app_error_weak.c'),
-  os.path.join(sdk_path, 'components', 'libraries', 'scheduler', 'app_scheduler.c'),
-  os.path.join(sdk_path, 'components', 'libraries', 'timer', 'app_timer2.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'util', 'app_util_platform.c'),
-  os.path.join(sdk_path, 'components', 'libraries', 'timer', 'drv_rtc.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'util', 'nrf_assert.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'atomic_fifo', 'nrf_atfifo.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'atomic', 'nrf_atomic.c'),
@@ -79,23 +59,20 @@ SRC_FILES = [
   os.path.join(sdk_path, 'components', 'libraries', 'ringbuf', 'nrf_ringbuf.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'sortlist', 'nrf_sortlist.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'strerror', 'nrf_strerror.c'),
-  # os.path.join(sdk_path, 'integration', 'nrfx', 'legacy', 'nrf_drv_spi.c'),
   os.path.join(sdk_path, 'integration', 'nrfx', 'legacy', 'nrf_drv_uart.c'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'soc', 'nrfx_atomic.c'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'nrfx_gpiote.c'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'prs', 'nrfx_prs.c'),
-  os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'nrfx_spi.c'),
-  os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'nrfx_spim.c'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'nrfx_uart.c'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'drivers', 'src', 'nrfx_uarte.c'),
   os.path.join(sdk_path, 'components', 'libraries', 'bsp', 'bsp.c'),
   os.path.join(sdk_path, 'external', 'segger_rtt', 'SEGGER_RTT.c'),
   os.path.join(sdk_path, 'external', 'segger_rtt', 'SEGGER_RTT_Syscalls_GCC.c'),
   os.path.join(sdk_path, 'external', 'segger_rtt', 'SEGGER_RTT_printf.c'),
-  os.path.join(sdk_path, 'modules', 'nrfx', 'mdk', 'system_nrf52.c'),
-]
+  os.path.join(sdk_path, 'modules', 'nrfx', 'mdk', 'system_nrf52.c'),]
+
 INC_DIRS = [
-  os.path.join('src', 'application', 'spi'),
+  os.path.join('src', 'application', 'bmp280'),
   os.path.join(sdk_path, 'components'),
   os.path.join(sdk_path, 'modules', 'nrfx', 'mdk'),
   os.path.join(sdk_path, 'components', 'libraries', 'scheduler'),

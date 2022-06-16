@@ -74,3 +74,66 @@ are described in more detail below.
 
   2. Name the new file something brief and descriptive, then fill in the
      contents as required
+
+
+# Example Configurations
+
+  ## Platforms
+
+      * pca10040: PCA10040 (nRF5 DK) board.
+
+      * local: Local development platform (e.g. 64-bit Linux).
+
+  ## Releases
+
+      * debug: "-Og -g" compile flags.
+
+      * production: "-O3" compile flags.
+
+  ## Applications
+
+      * hello_world: A simple hello world example intended to be run locally.
+
+      * unittest: An example unittest application intended to be run locally.
+
+      * blinky: The basic "blinky" example based on the nRF5 SDK example of the
+                same name; intended to be run on the pca10040 platform.
+
+      * bmp280: An example application for monitoring the temperature and
+                pressure from a BMP280 sensor. Can be used with either SPI or
+                TWI (I2C) interface by building with "-DBMP280_INTERFACE=xxx"
+                ("SPI" or "TWI").
+
+   ## Targets
+
+      * hello:
+         - application: hello_world
+         - platform: pca10040
+         - release: debug
+      
+      * unittest:
+         - application: unittest
+         - platform: local
+         - release: debug
+
+      * blinky:
+         - application: blinky
+         - platform: pca10040
+         - release: debug
+
+      * blinky_production:
+         - application: blinky
+         - platform: pca10040
+         - release: production
+
+      * bmp280_spi:
+         - application: bmp280
+         - platform: pca10040
+         - release: debug
+
+      * bmp280_twi:
+         - application: bmp280
+         - platform: pca10040
+         - release: debug
+
+      
