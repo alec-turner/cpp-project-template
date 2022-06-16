@@ -51,7 +51,7 @@ namespace pca10040 {
     bmp2_dev _bmp;
 
   private:
-    static constexpr uint8_t kDefaultPowerMode = BMP2_POWERMODE_NORMAL;
+    static constexpr uint8_t kDefaultPowerMode = BMP2_POWERMODE_FORCED;//BMP2_POWERMODE_NORMAL;
     static constexpr uint8_t kDefaultOsMode = BMP2_OS_MODE_STANDARD_RESOLUTION;
     static constexpr uint8_t kDefaultFilter = BMP2_FILTER_OFF;
     static constexpr uint8_t kDefaultOdr = BMP2_ODR_0_5_MS;

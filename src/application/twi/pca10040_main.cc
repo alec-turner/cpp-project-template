@@ -14,11 +14,11 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 #include "boards.h"
-#include "platform/pca10040/bmp280/bmp280_spi.h"
+#include "platform/pca10040/bmp280/bmp280_twi.h"
 
 
-// Initialise base BMP280 SPI driver
-pca10040::Bmp280Spi bmp;
+// Initialise base BMP280 TWI driver
+pca10040::Bmp280Twi bmp;
 
 
 int main(void)
@@ -28,20 +28,22 @@ int main(void)
   APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
   NRF_LOG_DEFAULT_BACKENDS_INIT();
 
+  nrf_delay_ms(2);
+
   if (!bmp.init() ){
-    NRF_LOG_INFO("BMP280 SPI init failed");
+    NRF_LOG_INFO("BMP280 TWI init failed");
     NRF_LOG_FLUSH();
     bsp_board_led_invert(0);
     APP_ERROR_CHECK(NRF_ERROR_INTERNAL);
   }
 
   if (!bmp.configure() ){
-    NRF_LOG_INFO("BMP280 SPI config failed");
+    NRF_LOG_INFO("BMP280 TWI config failed");
     NRF_LOG_FLUSH();
     bsp_board_led_invert(0);
     APP_ERROR_CHECK(NRF_ERROR_INTERNAL);
   }
-
+  
   uint32_t sampling_interval = bmp.get_sampling_interval();
   NRF_LOG_INFO("Sampling interval: %dus", sampling_interval);
 
@@ -67,21 +69,22 @@ int main(void)
 
   while (1) {
 
-    bsp_board_led_invert(0);
-
     if ( bmp.meas_ready() ) {
+
+      bsp_board_led_invert(0);
       result = bmp.sample();
       if (!result) {
-        APP_ERROR_CHECK(1);
+        APP_ERROR_CHECK(NRF_ERROR_INTERNAL);
       }
 
       temperature = bmp.get_temperature();
       pressure = bmp.get_pressure();
       NRF_LOG_INFO(NRF_LOG_FLOAT_MARKER "," NRF_LOG_FLOAT_MARKER, NRF_LOG_FLOAT(temperature), NRF_LOG_FLOAT(pressure));
       NRF_LOG_FLUSH();
+      bsp_board_led_invert(0);
 
     }
-    nrf_delay_us(sampling_interval);
+    nrf_delay_ms(sampling_interval/1000);
     index++;
   }
 

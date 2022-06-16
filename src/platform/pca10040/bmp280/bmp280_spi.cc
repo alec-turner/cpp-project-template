@@ -9,7 +9,9 @@
  * 
  */
 #include "nrf_delay.h"
+#include "nrf_log.h"
 #include "platform/pca10040/bmp280/bmp280_spi.h"
+
 
 pca10040::Bmp280Spi::Bmp280Spi() {
 
@@ -26,14 +28,6 @@ bool pca10040::Bmp280Spi::init() {
 
   // configure SPI
   _spi_driver.init();
-
-  // while (1){
-
-  //   _spi_driver.read(0xD0, &test, 1);
-  //   nrf_delay_ms(100);
-  // }
-
-
 
   // configure BMP280
   // set interface pointer to allow static functions to access class instance
@@ -77,5 +71,7 @@ int8_t pca10040::Bmp280Spi::write(uint8_t address, const uint8_t * data, uint32_
 
 
 void pca10040::Bmp280Spi::delay(uint32_t duration, void * intf_ptr){
-  nrf_delay_us(duration);
+  (void) intf_ptr;
+  // Note: ms delays are better implemented in nRF5 SDK; BMP delays are ms increments anyway
+  nrf_delay_ms(duration / 1000);
 }
