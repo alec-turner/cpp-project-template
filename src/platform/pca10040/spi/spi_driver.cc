@@ -7,10 +7,14 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Implementation of the SpiDriver class.
  */
 #include "platform/pca10040/spi/spi_driver.h"
 
 
+/**
+ * @brief Construct a new Spi Driver:: Spi Driver object
+ */
 pca10040::SpiDriver::SpiDriver() {
   _initialized = false;
   _transfer_complete = false;
@@ -30,11 +34,18 @@ pca10040::SpiDriver::SpiDriver() {
   _spi_config.frequency = kSpiSpeed;
 }
 
+
+/**
+ * @brief Destroy the Spi Driver:: Spi Driver object
+ */
 pca10040::SpiDriver::~SpiDriver() {
   deinit();
 }
 
 
+/**
+ * @brief Initialise the SPI driver.
+ */
 void pca10040::SpiDriver::init() {
   if (_initialized) {
     return;
@@ -49,6 +60,9 @@ void pca10040::SpiDriver::init() {
 }
 
 
+/**
+ * @brief Deinitialise the SPI driver.
+ */
 void pca10040::SpiDriver::deinit() {
   if (!_initialized) {
     return;
@@ -59,6 +73,15 @@ void pca10040::SpiDriver::deinit() {
 }
 
 
+/**
+ * @brief Write data to the SPI bus.
+ *
+ * @param tx_data The data to write.
+ * @param tx_length The length of the data to write.
+ * @param rx_data The data buffer to store the read data.
+ * @param rx_length The number of bytes to read.
+ * @param blocking If true, wait for the transaction to complete before returning
+ */
 void pca10040::SpiDriver::transfer(const uint8_t * tx_data, uint32_t tx_length, uint8_t * rx_data, uint32_t rx_length, bool blocking){
   if (!_initialized) {
     return;
@@ -81,6 +104,13 @@ void pca10040::SpiDriver::transfer(const uint8_t * tx_data, uint32_t tx_length, 
 }
 
 
+/**
+ * @brief write data to an SPI peripheral.
+ *
+ * @param reg The register to write to.
+ * @param data The data to write.
+ * @param length The length of the data to write.
+*/
 void pca10040::SpiDriver::write(uint8_t reg, uint8_t * data, uint32_t length) {
   if ( length + 1  > kBufferSize ){
     // length = kBufferSize - 1;
@@ -93,6 +123,13 @@ void pca10040::SpiDriver::write(uint8_t reg, uint8_t * data, uint32_t length) {
 }
 
 
+/**
+ * @brief read data from an SPI peripheral.
+ *
+ * @param reg The register to read from.
+ * @param data The data buffer to store the read data.
+ * @param length The number of bytes to read.
+*/
 void pca10040::SpiDriver::read(uint8_t reg, uint8_t * data, uint32_t length) {
   if ( length + 1  > kBufferSize ){
     // length = kBufferSize - 1;
@@ -105,6 +142,12 @@ void pca10040::SpiDriver::read(uint8_t reg, uint8_t * data, uint32_t length) {
 }
 
 
+/**
+ * @brief Handle (nRF) SPI events.
+ * 
+ * @param p_event pointer to an nRF event structure
+ * @param p_context pointer to the related SpiDriver class instance
+ */
 void pca10040::SpiDriver::spi_event_handler(nrfx_spim_evt_t const * p_event, void * p_context){
   SpiDriver * spi_driver = static_cast<SpiDriver *>(p_context);
 

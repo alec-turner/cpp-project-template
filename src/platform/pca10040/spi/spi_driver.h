@@ -7,6 +7,7 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Definition of the SpiDriver class.
  */
 
 #ifndef SRC_PLATFORM_PCA10040_SPI_SPI_DRIVER_H_

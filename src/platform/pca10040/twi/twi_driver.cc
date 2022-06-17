@@ -7,10 +7,15 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Implementation of the TwiDriver class.
  */
 
 #include "platform/pca10040/twi/twi_driver.h"
 
+
+/**
+ * @brief Construct a new TWI Driver:: TWI Driver object
+ */
 pca10040::TwiDriver::TwiDriver() {
   _initialized = false;
   _transfer_complete = false;
@@ -25,11 +30,17 @@ pca10040::TwiDriver::TwiDriver() {
 }
 
 
+/**
+ * @brief Destroy the TWI Driver:: TWI Driver object
+ */
 pca10040::TwiDriver::~TwiDriver() {
   deinit();
 }
 
 
+/**
+ * @brief Initialise the TWI driver.
+ */
 void pca10040::TwiDriver::init() {
   if (_initialized) {
     return;
@@ -54,6 +65,9 @@ void pca10040::TwiDriver::init() {
 }
 
 
+/**
+ * @brief Deinitialise the TWI driver.
+ */
 void pca10040::TwiDriver::deinit() {
   if (!_initialized) {
     return;
@@ -64,6 +78,14 @@ void pca10040::TwiDriver::deinit() {
 }
 
 
+/**
+ * @brief Write to a TWI device.
+ * @param address The address of the device to write to.
+ * @param data The data to write.
+ * @param length The length of the data to write.
+ * @param no_stop If true, the TWI will not set the stop condition after the write.
+ * @param blocking If true, wait for the transaction to complete before returning
+ */
 void pca10040::TwiDriver::write(uint8_t address, uint8_t * data, uint32_t length, bool no_stop, bool blocking) {
   if (!_initialized || nrfx_twi_is_busy(&_twi) ) {
     return;
@@ -85,6 +107,13 @@ void pca10040::TwiDriver::write(uint8_t address, uint8_t * data, uint32_t length
 }
 
 
+/**
+ * @brief Read from a TWI device.
+ * @param address The address of the device to read from.
+ * @param data The data buffer to store the read data.
+ * @param length The number of bytes to read.
+ * @param blocking If true, wait for the transaction to complete before returning
+ */
 void pca10040::TwiDriver::read(uint8_t address, uint8_t * data, uint32_t length, bool blocking) {
   if (!_initialized || nrfx_twi_is_busy(&_twi)) {
     return;
@@ -105,6 +134,14 @@ void pca10040::TwiDriver::read(uint8_t address, uint8_t * data, uint32_t length,
 }
 
 
+/**
+ * @brief Write to a TWI device register
+ * 
+ * @param address device bus address
+ * @param reg register address
+ * @param data data buffer to write from
+ * @param length number of bytes to write
+ */
 void pca10040::TwiDriver::write_reg(uint8_t address, uint8_t reg, uint8_t * data, uint32_t length) {
   if (!_initialized) {
     return;
@@ -116,6 +153,14 @@ void pca10040::TwiDriver::write_reg(uint8_t address, uint8_t reg, uint8_t * data
 }
 
 
+/**
+ * @brief Read from a TWI device register
+ *
+ * @param address device bus address
+ * @param reg register address
+ * @param data data buffer to store read data
+ * @param length number of bytes to read
+ */
 void pca10040::TwiDriver::read_reg(uint8_t address, uint8_t reg, uint8_t * data, uint32_t length) {
   if (!_initialized) {
     return;
@@ -128,6 +173,11 @@ void pca10040::TwiDriver::read_reg(uint8_t address, uint8_t reg, uint8_t * data,
 }
 
 
+/**
+ * @brief TWI event handler.
+ * @param p_event The event that occurred.
+ * @param p_context The related TwiDriver class instance.
+ */
 void pca10040::TwiDriver::twi_event_handler(nrfx_twi_evt_t const * p_event, void * p_context) {
   TwiDriver * twi_driver = static_cast<TwiDriver *>(p_context);
 

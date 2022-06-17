@@ -1,3 +1,19 @@
+/**
+ * @file main.cc
+ * @author Alec Turner (alec.turner8@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-06-16
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * @brief Main file for the unittest application.
+ *
+ * The unittest application uses the CPPUnit framework to run unit tests. This
+ * file defines a TestRunner instance and loads in a TestFactoryRegistry,
+ * optionally taking a test registry name as a command line argument if a
+ * subset of tests is desired.
+ */
 #include <stdio.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>

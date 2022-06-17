@@ -7,10 +7,17 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Implementation of the Bmp280Driver class.
  */
 #include "platform/pca10040/bmp280/bmp280_driver.h"
 
 
+/**
+ * @brief Construct a new BMP280 Driver:: BMP280 Driver object
+ *
+ * @param i2c_bus The I2C bus to use.
+ * @param i2c_addr The I2C address of the BMP280.
+ */
 pca10040::Bmp280Driver::Bmp280Driver() {
   _config.os_mode = kDefaultOsMode;
   _config.filter = kDefaultFilter;
@@ -20,10 +27,20 @@ pca10040::Bmp280Driver::Bmp280Driver() {
 }
 
 
+/**
+ * @brief Destroy the BMP280 Driver:: BMP280 Driver object
+ *
+ */
 pca10040::Bmp280Driver::~Bmp280Driver() {
 
 }
 
+
+/**
+ * @brief Configure the BMP280.
+ *
+ * @return true if successful, false otherwise.
+ */
 bool pca10040::Bmp280Driver::configure() {
   // apply settings
   int8_t result = bmp2_set_config(&_config, &_bmp);
@@ -46,6 +63,11 @@ bool pca10040::Bmp280Driver::configure() {
 }
 
 
+/**
+ * @brief Initialise the BMP280.
+ *
+ * @return true if successful, false otherwise.
+ */
 bool pca10040::Bmp280Driver::start() {
   int8_t result = bmp2_set_power_mode(_power_mode, &_config, &_bmp);
   if (result != BMP2_OK) {
@@ -57,6 +79,11 @@ bool pca10040::Bmp280Driver::start() {
 }
 
 
+/**
+ * @brief Check if the BMP280 is ready to sample.
+ *
+ * @return true if ready, false otherwise.
+ */
 bool pca10040::Bmp280Driver::stop() {
   int8_t result = bmp2_set_power_mode(BMP2_POWERMODE_SLEEP, &_config, &_bmp);
   if (result != BMP2_OK) {
@@ -68,6 +95,11 @@ bool pca10040::Bmp280Driver::stop() {
 }
 
 
+/**
+ * @brief Check if the BMP280 is ready to sample.
+ *
+ * @return true if ready, false otherwise.
+ */
 bool pca10040::Bmp280Driver::reset() {
   int8_t result = bmp2_soft_reset(&_bmp);
   if (result != BMP2_OK) {
@@ -79,6 +111,11 @@ bool pca10040::Bmp280Driver::reset() {
 }
 
 
+/**
+ * @brief Read the BMP280's temperature.
+ *
+ * @return The temperature in degrees C.
+ */
 bool pca10040::Bmp280Driver::meas_ready() {
   bmp2_status status;
   int8_t result = bmp2_get_status(&status, &_bmp);
@@ -91,6 +128,11 @@ bool pca10040::Bmp280Driver::meas_ready() {
 }
 
 
+/**
+ * @brief Read the BMP280's temperature.
+ *
+ * @return The temperature in degrees C.
+ */
 bool pca10040::Bmp280Driver::sample() {
   int8_t result = bmp2_get_sensor_data(&_data, &_bmp);
   if (result != BMP2_OK) {
@@ -102,11 +144,21 @@ bool pca10040::Bmp280Driver::sample() {
 }
 
 
+/**
+ * @brief Read the BMP280's temperature.
+ *
+ * @return The temperature in degrees C.
+ */
 float pca10040::Bmp280Driver::get_temperature() {
   return _data.temperature;
 }
 
 
+/**
+ * @brief Read the BMP280's pressure.
+ *
+ * @return The pressure in Pa.
+ */
 float pca10040::Bmp280Driver::get_pressure() {
   return _data.pressure;
 }

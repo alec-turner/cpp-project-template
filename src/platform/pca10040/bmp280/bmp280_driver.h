@@ -7,6 +7,8 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Definition of the Bmp280Driver class, a BMP280 driver for the PCA10040
+ *        board.
  */
 
 #ifndef SRC_PLATFORM_PCA10040_BMP280_BMP280_DRIVER_H_

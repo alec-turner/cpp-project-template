@@ -7,6 +7,7 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Definition of the Bmp280Spi class.
  */
 
 #ifndef SRC_PLATFORM_PCA10040_BMP280_BMP280_SPI_H_
@@ -25,8 +26,8 @@ namespace pca10040 {
     virtual bool init();
     virtual void deinit();
     static void delay(uint32_t duration, void * intf_ptr);
-    static int8_t read(uint8_t address, uint8_t * data, uint32_t length, void * intf_ptr);
-    static int8_t write(uint8_t address, const uint8_t * data, uint32_t length, void * intf_ptr);
+    static int8_t read(uint8_t reg, uint8_t * data, uint32_t length, void * intf_ptr);
+    static int8_t write(uint8_t reg, const uint8_t * data, uint32_t length, void * intf_ptr);
 
   protected:
 

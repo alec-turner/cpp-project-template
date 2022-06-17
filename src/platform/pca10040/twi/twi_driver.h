@@ -7,6 +7,7 @@
  * 
  * @copyright Copyright (c) 2022
  * 
+ * @brief Definition of the TwiDriver class.
  */
 
 #ifndef SRC_PLATFORM_PCA10040_TWI_TWI_DRIVER_H_
